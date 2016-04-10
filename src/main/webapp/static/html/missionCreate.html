@@ -1,0 +1,128 @@
+<div ng-init="doInit();">
+    <ol class="breadcrumb">
+        <li>我的</li>
+        <li><a href="#/mine/missionPublish">我发起的任务</a></li>
+        <li class="active">任务详情</li>
+    </ol>
+    <div class="well">
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="missionTitle" class="col-sm-2 control-label">任务标题</label>
+
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="missionTitle" placeholder="任务标题"
+                           ng-model="mission.missionTitle"
+                           required ng-disabled="{{mission.id != -1}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="missionDescription" class="col-sm-2 control-label">任务描述</label>
+
+                <div class="col-sm-8">
+                    <textarea class="form-control" rows="3" id="missionDescription" placeholder="任务详细描述"
+                              ng-model="mission.missionDescription" required
+                              ng-disabled="disableUpdate()"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="missionEndDate" class="col-sm-2 control-label">结束时间</label>
+
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form_datetime" id="missionEndDate"
+                           ng-model="mission.missionEndDate" readonly
+                           required ng-disabled="{{mission.id != -1}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="missionWinningMode" class="col-sm-2 control-label">中标模式</label>
+
+                <div class="col-sm-2">
+                    <select class="form-control" id="missionWinningMode" ng-model="mission.missionWinningMode"
+                            ng-disabled="{{mission.id != -1}}">
+                        <option>单人中标</option>
+                        <option>多人中标</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="missionMode" class="col-sm-2 control-label">任务模式</label>
+
+                <div class="col-sm-2">
+                    <select class="form-control" id="missionMode" ng-model="mission.missionMode"
+                            ng-disabled="{{mission.id != -1}}">
+                        <option>悬赏模式</option>
+                        <option>训练模式</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" ng-show="mission.missionMode == '悬赏模式'">
+                <label for="missionReward" class="col-sm-2 control-label">悬赏金额</label>
+
+                <div class="col-sm-2">
+                    <input type="number" class="form-control" id="missionReward" ng-model="mission.missionReward"
+                           ng-disabled="{{mission.id != -1}}">
+                </div>
+                <span> 元 </span>
+            </div>
+            <div class="form-group">
+                <label for="missionData" class="col-sm-2 control-label">任务资料</label>
+
+                <div class="col-sm-6" ng-hide="disableUpdate()">
+                    <button type="button" class="btn btn-primary" ng-click="clickMissionData()"
+                            data-loading-text="Loading...">选择文件
+                    </button>
+                    <input type="file" id="missionData" name="missionData" zip-file-on-change
+                           ng-callback="uploadMissionData"
+                           style="display:none"/>
+                    <a href="{{mission.missionData}}">{{mission.missionDataName}}</a>
+
+                    <p class="help-block">仅支持压缩包上传</p>
+                </div>
+                <div class="col-sm-6" ng-show="disableUpdate()">
+                    <a href="{{mission.missionData}}">{{mission.missionDataName}}</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="missionStatus" class="col-sm-2 control-label">任务状态</label>
+
+                <div class="col-sm-6" id="missionStatus">
+                    <span ng-class="getStatusLabelClass('进行中')">进行中</span>-
+                    <span ng-class="getStatusLabelClass('待审核')">待审核</span>-
+                    <span ng-class="getStatusLabelClass('已结束')">已结束</span>
+                </div>
+            </div>
+            <div class="form-group" ng-show="{{mission.id == -1}}">
+                <div class="col-sm-offset-2 col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block" ng-click="publishMission()">发布任务</button>
+                </div>
+            </div>
+            <div class="form-group" ng-show="showUpdateMissionBtn()">
+                <div class="col-sm-offset-2 col-sm-3">
+                    <button type="submit" class="btn btn-primary btn-block" ng-click="updateMission()">更新任务</button>
+                    <p class="help-block">更新任务资料会覆盖之前的版本</p>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="well" ng-hide="{{mission.id == -1}}">
+        <h4>任务作品</h4>
+
+        <div class="row">
+            <div ng-repeat="relationship in missionUserRelationships" class="col-xs-6 col-md-3">
+                <div ng-class="getMissionSubmitLabelClass(relationship.missionBidStatus)">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><a href="">{{userAcceptMission[$index].userName}}</a></h3>
+                    </div>
+                    <div class="panel-body">
+                        <a href="{{relationship.missionSubmitData}}">{{relationship.missionSubmitDataName}}</a>
+                        <a class="btn btn-primary pull-right" href="" ng-click="bidRelationship(relationship)"
+                           ng-show="showBidBtn(relationship.missionBidStatus)">中标</a>
+                        <button class="btn btn-primary pull-right" ng-disabled="true"
+                                ng-show="showBidStatus(relationship.missionBidStatus)">已中标
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

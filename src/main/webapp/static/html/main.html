@@ -1,0 +1,70 @@
+<div ng-init="doInit();">
+    <div class="jumbotron text-center">
+        <h1>川大威客联盟</h1>
+
+        <p>在这里，你可以得到满意的解决方案。</p>
+
+        <p>在这里，你可以尽情施展你的才华.<br/>
+            <a class="btn btn-lg btn-primary" href="#/register" role="button" ng-hide="userShow">马上加入我们 &raquo;</a>
+        </p>
+    </div>
+    <div class="row well">
+        <div class="col-xs-7">
+            <div id="carouselRecommend" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselRecommend" ng-repeat="recommend in recommends"
+                        data-slide-to="{{$index}}" ng-class="{active:$index == 0}"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-inner">
+                        <div class="item" ng-repeat="recommend in recommends" ng-class="{active: $index == 0}">
+                            <img ng-src="{{recommend.imgUrl}}" alt="{{recommend.title}}" height="100%" width="100%">
+
+                            <div class="carousel-caption">
+                                <p>{{recommend.description}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="left carousel-control" data-target="#carouselRecommend" href="" data-slide="prev"><span
+                        class="icon-prev"></span></a>
+                <a class="right carousel-control" data-target="#carouselRecommend" href="" data-slide="next"><span
+                        class="icon-next"></span></a>
+            </div>
+        </div>
+        <div class="col-xs-5">
+            <div class="well" ng-hide="userShow">
+                <form ng-submit="loginForm()" method="post">
+                    <h3>用户登录</h3>
+
+                    <div class="form-group input-group">
+                        <span class="input-group-addon">邮箱</span>
+                        <input type="email" class="form-control" placeholder="邮箱" ng-model="email" required autofocus>
+                    </div>
+
+                    <div class="form-group input-group">
+                        <span class="input-group-addon">密码</span>
+                        <input type="password" class="form-control" placeholder="密码" ng-model="password" required>
+                    </div>
+                    <label class="checkbox">
+                        <input type="checkbox" value="remember-me"> 记住用户名和密码
+                    </label>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+                </form>
+            </div>
+            <div class="well" ng-show="userShow">
+                <h5>最新任务</h5>
+
+                <div ng-repeat="mission in recentlyMission" class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{mission.missionTitle}}</h3>
+                    </div>
+                    <div class="panel-body">
+                        有效期：{{mission.missionBeginDate}}至{{mission.missionEndDate}}
+                        <a class="btn btn-primary pull-right" href="#/missionDetail/{{mission.id}}">任务详情>></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

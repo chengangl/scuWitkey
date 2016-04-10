@@ -1,0 +1,109 @@
+<div ng-init="doInit();">
+    <div class="well">
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="userName" class="col-sm-2 control-label">用户名</label>
+
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="userName" placeholder="用户名" ng-model="user.userName"
+                           required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="col-sm-2 control-label">邮箱</label>
+
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="email" placeholder="邮箱" ng-model="user.email"
+                           required disabled>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="school" class="col-sm-2 control-label">就读学校</label>
+
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="school" placeholder="就读学校" ng-model="user.school">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="college" class="col-sm-2 control-label">所在学院</label>
+
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="college" placeholder="所在学院" ng-model="user.college">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="specialty" class="col-sm-2 control-label">所在专业</label>
+
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="specialty" placeholder="所在专业" ng-model="user.specialty">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="grade" class="col-sm-2 control-label">年级</label>
+
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="grade" placeholder="入学年份" ng-model="user.grade">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="qq" class="col-sm-2 control-label">QQ</label>
+
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="qq" placeholder="QQ" ng-model="user.qq">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="telephone" class="col-sm-2 control-label">手机号</label>
+
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="telephone" placeholder="手机号" ng-model="user.telephone">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="avatar" class="col-sm-2 control-label">用户头像</label>
+
+                <div class="col-sm-5">
+                    <button type="button" class="btn btn-primary" ng-click="clickPic()">修改头像</button>
+                    <input type="file" id="avatar" name="avatar" pic-file-on-change
+                           ng-callback="uploadAvatar"
+                           style="display:none"/>
+                </div>
+            </div>
+            <div class="form-group" ng-show="showAvatar">
+                <div class="col-sm-offset-2 col-sm-5">
+                    <img src="{{user.avatar}}" width="140" height="140" class="thumbnail"/>
+                </div>
+            </div>
+
+            <div class="form-group" ng-hide="showAvatar">
+                <div class="col-sm-offset-2 col-sm-5">
+                    <img src="" width="633" height="310" id="avatarImg"/>
+                </div>
+            </div>
+            <div class="form-group" ng-hide="showAvatar">
+                <label for="avatarPreview" class="col-sm-2 control-label">头像预览</label>
+
+                <div class="col-sm-2">
+                    <div id="preview-container" style="width: 140px;height: 140px;overflow: hidden;">
+                        <img id="avatarPreview" src=""/>
+                    </div>
+                    <button type="button" class="btn btn-primary" ng-click="updateAvatar()">确认修改</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-5">
+                    <button type="submit" class="btn btn-primary btn-block" ng-click="updateUserForm()">更新用户信息</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

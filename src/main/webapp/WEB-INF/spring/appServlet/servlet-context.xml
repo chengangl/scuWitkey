@@ -1,0 +1,44 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:component-scan base-package="com.scu.scuWitkey"/>
+    <mvc:annotation-driven/>
+
+    <!-- 拦截器 -->
+<!--    <mvc:interceptors>
+        <bean class="com.scu.scuWitkey" />
+    </mvc:interceptors>-->
+
+    <!-- 对静态资源文件的访问  方案一 （二选一） -->
+    <mvc:default-servlet-handler/>
+
+    <!-- 对静态资源文件的访问  方案二 （二选一）-->
+<!--    <mvc:resources mapping="/images/**" location="/images/" cache-period="31556926"/>
+    <mvc:resources mapping="/js/**" location="/js/" cache-period="31556926"/>
+    <mvc:resources mapping="/css/**" location="/css/" cache-period="31556926"/>-->
+    <mvc:resources mapping="/static/**" location="/static/" />
+
+<!--    &lt;!&ndash; 拦截器 &ndash;&gt;
+    <mvc:interceptors>
+        &lt;!&ndash; 多个拦截器,顺序执行 &ndash;&gt;
+        <mvc:interceptor>
+            &lt;!&ndash; 如果不配置或/**,将拦截所有的Controller &ndash;&gt;
+            <mvc:mapping path="/**" />
+            &lt;!&ndash; 在Freemarker界面展示之前做一些通用处理   &ndash;&gt;
+            <bean class="com.scu.core.web.FreeMarkerViewInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>-->
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
+</beans>

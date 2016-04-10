@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+	     http://www.springframework.org/schema/tx
+	     http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- Root Context: defines shared resources visible to all other web components -->
+
+    <tx:annotation-driven/>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="typeAliasesPackage" value="com.scu.scuWitkey.core.domain"/>
+    </bean>
+
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+        <constructor-arg index="1" value="BATCH"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.scu.scuWitkey.core.mapper"/>
+    </bean>
+
+    <bean id="fileService" class="com.scu.scuWitkey.core.service.FileService">
+        <property name="root" value="${file.root}"/>
+        <property name="domainAddress" value="${file.domainAddress}"/>
+    </bean>
+
+    <bean id="userService" class="com.scu.scuWitkey.core.service.UserService"/>
+    <bean id="missionService" class="com.scu.scuWitkey.core.service.MissionService"/>
+    <bean id="missionUserRelationshipService" class="com.scu.scuWitkey.core.service.MissionUserRelationshipService"/>
+
+    <bean name="missionTask"
+          class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.scu.scuWitkey.core.job.ValidateMissionJob"/>
+        <property name="durability" value="true"/>
+    </bean>
+    <!-- 触发器 -->
+    <bean id="cronTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!-- 指向我们的任务 -->
+        <property name="jobDetail" ref="missionTask"/>
+        <!--  每天下午16点50分到55分,每分钟运行一次 -->
+        <!--<property name="cronExpression" value="0 0 0 * * ?"/>-->
+        <property name="cronExpression" value="0 0 0 * * ?"/>
+    </bean>
+    <!-- 调度器  -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="schedulerContextAsMap">
+            <map>
+                <!-- spring 管理的service需要放到这里，才能够注入成功 -->
+                <description>schedulerContextAsMap</description>
+                <entry key="missionServiceKey" value-ref="missionService"/>
+            </map>
+        </property>
+        <property name="triggers">
+            <list>
+                <!--  触发器列表 -->
+                <ref bean="cronTrigger"/>
+            </list>
+        </property>
+        <property name="applicationContextSchedulerContextKey" value="applicationContextKey"/>
+        <property name="configLocation" value="classpath:quartz.properties"/>
+    </bean>
+
+</beans>

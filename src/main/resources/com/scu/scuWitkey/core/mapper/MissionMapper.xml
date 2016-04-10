@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+       Copyright 2010-2013 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scu.scuWitkey.core.mapper.MissionMapper">
+
+    <cache/>
+
+    <select id="getAllMission" resultType="com.scu.scuWitkey.core.domain.MissionModel">
+        SELECT
+        *
+        FROM `mission_table`
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="missionWinningMode != '中标模式'">
+                `missionWinningMode` = #{missionWinningMode}
+            </if>
+            <if test="missionMode != '任务模式'">
+                AND `missionMode` = #{missionMode}
+            </if>
+            <if test="missionStatus != '任务状态'">
+                AND `missionStatus` = #{missionStatus}
+            </if>
+        </trim>
+        ORDER BY `id` DESC
+        LIMIT #{currentPage},#{pageCount}
+    </select>
+
+    <select id="getAllMissionAmount" resultType="int">
+        SELECT
+        count(*)
+        FROM `mission_table`
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="missionWinningMode != '中标模式'">
+                `missionWinningMode` = #{missionWinningMode}
+            </if>
+            <if test="missionMode != '任务模式'">
+                AND `missionMode` = #{missionMode}
+            </if>
+            <if test="missionStatus != '任务状态'">
+                AND `missionStatus` = #{missionStatus}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getRecentlyMission" resultType="com.scu.scuWitkey.core.domain.MissionModel">
+        SELECT
+            *
+        FROM `mission_table`
+        ORDER BY `id` DESC
+        LIMIT 2
+    </select>
+
+    <select id="getMissionByMissionPublisherId" resultType="com.scu.scuWitkey.core.domain.MissionModel">
+        SELECT
+        *
+        FROM `mission_table`
+        WHERE `missionPublisherId` = #{missionPublisherId}
+        <if test="missionWinningMode != '中标模式'">
+            AND `missionWinningMode` = #{missionWinningMode}
+        </if>
+        <if test="missionMode != '任务模式'">
+            AND `missionMode` = #{missionMode}
+        </if>
+        <if test="missionStatus != '任务状态'">
+            AND `missionStatus` = #{missionStatus}
+        </if>
+        ORDER BY `id` DESC
+        LIMIT #{startIndex},#{pageCount}
+    </select>
+
+    <select id="getMissionAmountByMissionPublisherId" resultType="int">
+        SELECT
+        COUNT(*)
+        FROM `mission_table`
+        WHERE `missionPublisherId` = #{missionPublisherId}
+        <if test="missionWinningMode != '中标模式'">
+            AND `missionWinningMode` = #{missionWinningMode}
+        </if>
+        <if test="missionMode != '任务模式'">
+            AND `missionMode` = #{missionMode}
+        </if>
+        <if test="missionStatus != '任务状态'">
+            AND `missionStatus` = #{missionStatus}
+        </if>
+    </select>
+
+    <select id="getMissionById" parameterType="long" resultType="com.scu.scuWitkey.core.domain.MissionModel">
+        SELECT
+            *
+        FROM `mission_table`
+        WHERE `id` = #{missionId}
+    </select>
+
+    <select id="acceptMission" parameterType="long">
+        UPDATE
+            `mission_table`
+        SET `missionStatus` = '进行中'
+        WHERE `id` = #{missionId}
+        ORDER BY `missionBeginDate` DESC
+    </select>
+
+    <insert id="insertMission" parameterType="com.scu.scuWitkey.core.domain.MissionModel">
+        <selectKey resultType="java.lang.Short" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT
+        INTO
+        `mission_table`(`missionTitle`,`missionDescription`,`missionBeginDate`,`missionEndDate`,`missionWinningMode`,`missionMode`,`missionReward`,`missionPublisherId`,`missionData`,
+        `missionDataName`)
+        VALUES
+        (#{missionTitle},#{missionDescription},#{missionBeginDate},#{missionEndDate},#{missionWinningMode},#{missionMode},#{missionReward},#{missionPublisherId},#{missionData},
+        #{missionDataName})
+    </insert>
+
+    <update id="updateMission" parameterType="com.scu.scuWitkey.core.domain.MissionModel">
+        UPDATE
+            `mission_table`
+        SET
+            `missionTitle`       = #{missionTitle}, `missionDescription` = #{missionDescription},
+            `missionBeginDate`   = #{missionBeginDate}, `missionEndDate` = #{missionEndDate},
+            `missionWinningMode` = #{missionWinningMode}, `missionMode` = #{missionMode},
+            `missionReward`      = #{missionReward}, `missionPublisherId` = #{missionPublisherId},
+            `missionData`        = #{missionData}, `missionDataName` = #{missionDataName}
+        WHERE
+            `id` = #{id}
+    </update>
+
+    <update id="finishMission">
+        UPDATE
+        `mission_table`
+        SET
+        `missionStatus` = '已结束'
+        WHERE
+        `id` = #{id}
+    </update>
+
+    <update id="updateMissionStatusPending">
+        UPDATE
+        `mission_table`
+        SET
+        `missionStatus` = '待审核'
+        WHERE
+        DATEDIFF(NOW(), `missionEndDate`) BETWEEN 0 AND 4  AND `missionStatus` != '待审核'
+    </update>
+
+    <update id="updateMissionStatusFinished">
+        UPDATE
+            `mission_table`
+        SET
+            `missionStatus` = '已结束'
+        WHERE
+            DATEDIFF(NOW(), `missionEndDate`) >= 5 AND `missionStatus` != '已结束'
+    </update>
+
+</mapper>

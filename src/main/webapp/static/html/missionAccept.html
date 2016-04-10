@@ -1,0 +1,59 @@
+<div ng-init="doInit();">
+    <ol class="breadcrumb">
+        <li>我的</li>
+        <li class="active">我接受的任务</li>
+    </ol>
+    <ul class="nav nav-tabs">
+        <li ng-class="activeIfTabEquals(0)"><a href="" ng-click="setTab(0,0,'')" class="dropdown-toggle"
+                                               data-toggle="dropdown"
+                >全部</a></li>
+        <li ng-class="activeIfTabEquals(1)"><a href="" class="dropdown-toggle" data-toggle="dropdown"
+                >{{missionWinningMode}}<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="" ng-click="setTab(1,1,'中标模式')">所有模式</a></li>
+                <li><a href="" ng-click="setTab(1,1,'单人中标')">单人中标</a></li>
+                <li><a href="" ng-click="setTab(1,1,'多人中标')">多人中标</a></li>
+            </ul>
+        </li>
+        <li ng-class="activeIfTabEquals(1)"><a href="" class="dropdown-toggle" data-toggle="dropdown"
+                >{{missionMode}}<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="" ng-click="setTab(1,2,'任务模式')">所有模式</a></li>
+                <li><a href="" ng-click="setTab(1,2,'训练模式')">训练模式</a></li>
+                <li><a href="" ng-click="setTab(1,2,'悬赏模式')">悬赏模式</a></li>
+            </ul>
+        </li>
+        <li ng-class="activeIfTabEquals(1)"><a href="" class="dropdown-toggle" data-toggle="dropdown"
+                >{{missionStatus}}<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="" ng-click="setTab(1,3,'任务状态')">所有状态</a></li>
+                <li><a href="" ng-click="setTab(1,3,'进行中')">进行中</a></li>
+                <li><a href="" ng-click="setTab(1,3,'待审核')">待审核</a></li>
+                <li><a href="" ng-click="setTab(1,3,'已结束')">已结束</a></li>
+            </ul>
+        </li>
+    </ul>
+    <br>
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <div ng-repeat="mission in missionAccept" ng-class="panelClass[$index].panelClass">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{mission.missionTitle}}</h3>
+                </div>
+                <div class="panel-body">
+                    有效期：{{mission.missionBeginDate}}至{{mission.missionEndDate}}
+                    <span class="label label-info">{{mission.missionWinningMode}}</span>
+                    <span class="label label-info">{{mission.missionMode}}</span>
+                    <span class="label label-info">{{mission.missionStatus}}</span>
+                    <a class="btn btn-info pull-right" href="#/missionDetail/{{mission.id}}">任务详情>></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center well" ng-show="showEmpty()">
+        你还有接受的任务，赶紧去<a class="btn btn-primary" href="#/mission">任务列表</a>看看吧~
+    </div>
+    <div class="text-center" ng-hide="showEmpty()">
+        <ul id="pagination" style="cursor:pointer;"></ul>
+    </div>
+</div>

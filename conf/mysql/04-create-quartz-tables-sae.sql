@@ -1,0 +1,281 @@
+SET FOREIGN_KEY_CHECKS = 0;
+-- ----------------------------
+--  Table structure for `QRTZ_BLOB_TRIGGERS`
+-- ----------------------------
+DROP TABLE IF EXISTS `QRTZ_BLOB_TRIGGERS`;
+CREATE TABLE `QRTZ_BLOB_TRIGGERS` (
+  `SCHED_NAME`    VARCHAR(100)
+                  COLLATE utf8_bin NOT NULL,
+  `TRIGGER_NAME`  VARCHAR(100)
+                  COLLATE utf8_bin NOT NULL,
+  `TRIGGER_GROUP` VARCHAR(100)
+                  COLLATE utf8_bin NOT NULL,
+  `BLOB_DATA`     BLOB,
+  PRIMARY KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`),
+  KEY `SCHED_NAME` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`),
+  CONSTRAINT `qrtz_blob_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_bin;
+
+-- ----------------------------
+--  Table structure for `QRTZ_CALENDARS`
+-- ----------------------------
+DROP TABLE IF EXISTS `QRTZ_CALENDARS`;
+CREATE TABLE `QRTZ_CALENDARS` (
+  `SCHED_NAME`    VARCHAR(100)
+                  COLLATE utf8_bin NOT NULL,
+  `CALENDAR_NAME` VARCHAR(100)
+                  COLLATE utf8_bin NOT NULL,
+  `CALENDAR`      BLOB             NOT NULL,
+  PRIMARY KEY (`SCHED_NAME`, `CALENDAR_NAME`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_bin;
+
+-- ----------------------------
+--  Table structure for `QRTZ_CRON_TRIGGERS`
+-- ----------------------------
+DROP TABLE IF EXISTS `QRTZ_CRON_TRIGGERS`;
+CREATE TABLE `QRTZ_CRON_TRIGGERS` (
+  `SCHED_NAME`      VARCHAR(100)
+                    COLLATE utf8_bin NOT NULL,
+  `TRIGGER_NAME`    VARCHAR(100)
+                    COLLATE utf8_bin NOT NULL,
+  `TRIGGER_GROUP`   VARCHAR(100)
+                    COLLATE utf8_bin NOT NULL,
+  `CRON_EXPRESSION` VARCHAR(100)
+                    COLLATE utf8_bin NOT NULL,
+  `TIME_ZONE_ID`    VARCHAR(100)
+                    COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`),
+  CONSTRAINT `qrtz_cron_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_bin;
+
+-- ----------------------------
+--  Table structure for `QRTZ_FIRED_TRIGGERS`
+-- ----------------------------
+DROP TABLE IF EXISTS `QRTZ_FIRED_TRIGGERS`;
+CREATE TABLE `QRTZ_FIRED_TRIGGERS` (
+  `SCHED_NAME`        VARCHAR(100)
+                      COLLATE utf8_bin NOT NULL,
+  `ENTRY_ID`          VARCHAR(100)
+                      COLLATE utf8_bin NOT NULL,
+  `TRIGGER_NAME`      VARCHAR(100)
+                      COLLATE utf8_bin NOT NULL,
+  `TRIGGER_GROUP`     VARCHAR(100)
+                      COLLATE utf8_bin NOT NULL,
+  `INSTANCE_NAME`     VARCHAR(100)
+                      COLLATE utf8_bin NOT NULL,
+  `FIRED_TIME`        BIGINT(13)       NOT NULL,
+  `PRIORITY`          INT(11)          NOT NULL,
+  `STATE`             VARCHAR(16)
+                      COLLATE utf8_bin NOT NULL,
+  `JOB_NAME`          VARCHAR(100)
+                      COLLATE utf8_bin DEFAULT NULL,
+  `JOB_GROUP`         VARCHAR(100)
+                      COLLATE utf8_bin DEFAULT NULL,
+  `IS_NONCONCURRENT`  VARCHAR(1)
+                      COLLATE utf8_bin DEFAULT NULL,
+  `REQUESTS_RECOVERY` VARCHAR(1)
+                      COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`SCHED_NAME`, `ENTRY_ID`),
+  KEY `IDX_QRTZ_FT_TRIG_INST_NAME` (`SCHED_NAME`, `INSTANCE_NAME`),
+  KEY `IDX_QRTZ_FT_INST_JOB_REQ_RCVRY` (`SCHED_NAME`, `INSTANCE_NAME`, `REQUESTS_RECOVERY`),
+  KEY `IDX_QRTZ_FT_J_G` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`),
+  KEY `IDX_QRTZ_FT_JG` (`SCHED_NAME`, `JOB_GROUP`),
+  KEY `IDX_QRTZ_FT_T_G` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`),
+  KEY `IDX_QRTZ_FT_TG` (`SCHED_NAME`, `TRIGGER_GROUP`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_bin;
+
+-- ----------------------------
+--  Table structure for `QRTZ_JOB_DETAILS`
+-- ----------------------------
+DROP TABLE IF EXISTS `QRTZ_JOB_DETAILS`;
+CREATE TABLE `QRTZ_JOB_DETAILS` (
+  `SCHED_NAME`        VARCHAR(100)
+                      COLLATE utf8_bin NOT NULL,
+  `JOB_NAME`          VARCHAR(100)
+                      COLLATE utf8_bin NOT NULL,
+  `JOB_GROUP`         VARCHAR(100)
+                      COLLATE utf8_bin NOT NULL,
+  `DESCRIPTION`       VARCHAR(100)
+                      COLLATE utf8_bin DEFAULT NULL,
+  `JOB_CLASS_NAME`    VARCHAR(100)
+                      COLLATE utf8_bin NOT NULL,
+  `IS_DURABLE`        VARCHAR(1)
+                      COLLATE utf8_bin NOT NULL,
+  `IS_NONCONCURRENT`  VARCHAR(1)
+                      COLLATE utf8_bin NOT NULL,
+  `IS_UPDATE_DATA`    VARCHAR(1)
+                      COLLATE utf8_bin NOT NULL,
+  `REQUESTS_RECOVERY` VARCHAR(1)
+                      COLLATE utf8_bin NOT NULL,
+  `JOB_DATA`          BLOB,
+  PRIMARY KEY (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`),
+  KEY `IDX_QRTZ_J_REQ_RECOVERY` (`SCHED_NAME`, `REQUESTS_RECOVERY`),
+  KEY `IDX_QRTZ_J_GRP` (`SCHED_NAME`, `JOB_GROUP`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_bin;
+
+-- ----------------------------
+--  Table structure for `QRTZ_LOCKS`
+-- ----------------------------
+DROP TABLE IF EXISTS `QRTZ_LOCKS`;
+CREATE TABLE `QRTZ_LOCKS` (
+  `SCHED_NAME` VARCHAR(100)
+               COLLATE utf8_bin NOT NULL,
+  `LOCK_NAME`  VARCHAR(40)
+               COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`SCHED_NAME`, `LOCK_NAME`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_bin;
+
+-- ----------------------------
+--  Table structure for `QRTZ_PAUSED_TRIGGER_GRPS`
+-- ----------------------------
+DROP TABLE IF EXISTS `QRTZ_PAUSED_TRIGGER_GRPS`;
+CREATE TABLE `QRTZ_PAUSED_TRIGGER_GRPS` (
+  `SCHED_NAME`    VARCHAR(100)
+                  COLLATE utf8_bin NOT NULL,
+  `TRIGGER_GROUP` VARCHAR(100)
+                  COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`SCHED_NAME`, `TRIGGER_GROUP`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_bin;
+
+-- ----------------------------
+--  Table structure for `QRTZ_SCHEDULER_STATE`
+-- ----------------------------
+DROP TABLE IF EXISTS `QRTZ_SCHEDULER_STATE`;
+CREATE TABLE `QRTZ_SCHEDULER_STATE` (
+  `SCHED_NAME`        VARCHAR(100)
+                      COLLATE utf8_bin NOT NULL,
+  `INSTANCE_NAME`     VARCHAR(100)
+                      COLLATE utf8_bin NOT NULL,
+  `LAST_CHECKIN_TIME` BIGINT(13)       NOT NULL,
+  `CHECKIN_INTERVAL`  BIGINT(13)       NOT NULL,
+  PRIMARY KEY (`SCHED_NAME`, `INSTANCE_NAME`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_bin;
+
+-- ----------------------------
+--  Table structure for `QRTZ_SIMPLE_TRIGGERS`
+-- ----------------------------
+DROP TABLE IF EXISTS `QRTZ_SIMPLE_TRIGGERS`;
+CREATE TABLE `QRTZ_SIMPLE_TRIGGERS` (
+  `SCHED_NAME`      VARCHAR(100)
+                    COLLATE utf8_bin NOT NULL,
+  `TRIGGER_NAME`    VARCHAR(100)
+                    COLLATE utf8_bin NOT NULL,
+  `TRIGGER_GROUP`   VARCHAR(100)
+                    COLLATE utf8_bin NOT NULL,
+  `REPEAT_COUNT`    BIGINT(7)        NOT NULL,
+  `REPEAT_INTERVAL` BIGINT(12)       NOT NULL,
+  `TIMES_TRIGGERED` BIGINT(10)       NOT NULL,
+  PRIMARY KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`),
+  CONSTRAINT `qrtz_simple_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_bin;
+
+-- ----------------------------
+--  Table structure for `QRTZ_SIMPROP_TRIGGERS`
+-- ----------------------------
+DROP TABLE IF EXISTS `QRTZ_SIMPROP_TRIGGERS`;
+CREATE TABLE `QRTZ_SIMPROP_TRIGGERS` (
+  `SCHED_NAME`    VARCHAR(100)
+                  COLLATE utf8_bin NOT NULL,
+  `TRIGGER_NAME`  VARCHAR(100)
+                  COLLATE utf8_bin NOT NULL,
+  `TRIGGER_GROUP` VARCHAR(100)
+                  COLLATE utf8_bin NOT NULL,
+  `STR_PROP_1`    VARCHAR(100)
+                  COLLATE utf8_bin DEFAULT NULL,
+  `STR_PROP_2`    VARCHAR(100)
+                  COLLATE utf8_bin DEFAULT NULL,
+  `STR_PROP_3`    VARCHAR(100)
+                  COLLATE utf8_bin DEFAULT NULL,
+  `INT_PROP_1`    INT(11) DEFAULT NULL,
+  `INT_PROP_2`    INT(11) DEFAULT NULL,
+  `LONG_PROP_1`   BIGINT(20) DEFAULT NULL,
+  `LONG_PROP_2`   BIGINT(20) DEFAULT NULL,
+  `DEC_PROP_1`    DECIMAL(13, 4) DEFAULT NULL,
+  `DEC_PROP_2`    DECIMAL(13, 4) DEFAULT NULL,
+  `BOOL_PROP_1`   VARCHAR(1)
+                  COLLATE utf8_bin DEFAULT NULL,
+  `BOOL_PROP_2`   VARCHAR(1)
+                  COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`),
+  CONSTRAINT `qrtz_simprop_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_bin;
+
+-- ----------------------------
+--  Table structure for `QRTZ_TRIGGERS`
+-- ----------------------------
+DROP TABLE IF EXISTS `QRTZ_TRIGGERS`;
+CREATE TABLE `QRTZ_TRIGGERS` (
+  `SCHED_NAME`     VARCHAR(100)
+                   COLLATE utf8_bin NOT NULL,
+  `TRIGGER_NAME`   VARCHAR(100)
+                   COLLATE utf8_bin NOT NULL,
+  `TRIGGER_GROUP`  VARCHAR(100)
+                   COLLATE utf8_bin NOT NULL,
+  `JOB_NAME`       VARCHAR(100)
+                   COLLATE utf8_bin NOT NULL,
+  `JOB_GROUP`      VARCHAR(100)
+                   COLLATE utf8_bin NOT NULL,
+  `DESCRIPTION`    VARCHAR(100)
+                   COLLATE utf8_bin DEFAULT NULL,
+  `NEXT_FIRE_TIME` BIGINT(13) DEFAULT NULL,
+  `PREV_FIRE_TIME` BIGINT(13) DEFAULT NULL,
+  `PRIORITY`       INT(11) DEFAULT NULL,
+  `TRIGGER_STATE`  VARCHAR(16)
+                   COLLATE utf8_bin NOT NULL,
+  `TRIGGER_TYPE`   VARCHAR(8)
+                   COLLATE utf8_bin NOT NULL,
+  `START_TIME`     BIGINT(13)       NOT NULL,
+  `END_TIME`       BIGINT(13) DEFAULT NULL,
+  `CALENDAR_NAME`  VARCHAR(100)
+                   COLLATE utf8_bin DEFAULT NULL,
+  `MISFIRE_INSTR`  SMALLINT(2) DEFAULT NULL,
+  `JOB_DATA`       BLOB,
+  PRIMARY KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`),
+  KEY `IDX_QRTZ_T_J` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`),
+  KEY `IDX_QRTZ_T_JG` (`SCHED_NAME`, `JOB_GROUP`),
+  KEY `IDX_QRTZ_T_C` (`SCHED_NAME`, `CALENDAR_NAME`),
+  KEY `IDX_QRTZ_T_G` (`SCHED_NAME`, `TRIGGER_GROUP`),
+  KEY `IDX_QRTZ_T_STATE` (`SCHED_NAME`, `TRIGGER_STATE`),
+  KEY `IDX_QRTZ_T_N_STATE` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`, `TRIGGER_STATE`),
+  KEY `IDX_QRTZ_T_N_G_STATE` (`SCHED_NAME`, `TRIGGER_GROUP`, `TRIGGER_STATE`),
+  KEY `IDX_QRTZ_T_NEXT_FIRE_TIME` (`SCHED_NAME`, `NEXT_FIRE_TIME`),
+  KEY `IDX_QRTZ_T_NFT_ST` (`SCHED_NAME`, `TRIGGER_STATE`, `NEXT_FIRE_TIME`),
+  KEY `IDX_QRTZ_T_NFT_MISFIRE` (`SCHED_NAME`, `MISFIRE_INSTR`, `NEXT_FIRE_TIME`),
+  KEY `IDX_QRTZ_T_NFT_ST_MISFIRE` (`SCHED_NAME`, `MISFIRE_INSTR`, `NEXT_FIRE_TIME`, `TRIGGER_STATE`),
+  KEY `IDX_QRTZ_T_NFT_ST_MISFIRE_GRP` (`SCHED_NAME`, `MISFIRE_INSTR`, `NEXT_FIRE_TIME`, `TRIGGER_GROUP`, `TRIGGER_STATE`),
+  CONSTRAINT `qrtz_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) REFERENCES `QRTZ_JOB_DETAILS` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_bin;
+SET FOREIGN_KEY_CHECKS = 1;

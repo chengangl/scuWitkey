@@ -1,0 +1,39 @@
+<div ng-init="doInit();">
+
+    <div class="page-header">
+        <h1>首页新闻设置</h1>
+    </div>
+    <div class="row well">
+        <div class="col-sm-6 col-md-4" ng-repeat="recommend in recommends">
+            <form ng-submit="recommendForm($index)" method="post">
+                <div class="thumbnail">
+                    <div class="controls">
+                        <a href="" ng-click="clickPic($index)"><img ng-src="{{recommend.imgUrl}}" alt="点击修改图片"></a>
+                        <input type="file" id="file{{$index}}" name="file{{$index}}" pic-file-on-change
+                               ng-callback="uploadPic"
+                               style="display:none"/>
+                    </div>
+
+                    <div class="caption">
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3" id="indexRecommendNewsTitle"
+                                      placeholder="新闻标题,长度不超过20个字"
+                                      ng-model="recommend.description" required maxlength="20" ng-change="showSubmitBtn($index)"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-danger text-right"
+                                ng-click="deleteRecommend($index)">删除
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-primary text-right" ng-show="submitBtnGroup[$index]">提交</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-6 col-md-4" ng-show="recommends.length < 6">
+            <div class="thumbnail">
+                <div class="controls">
+                    <a href="" ng-click="addRecommend()"><img ng-src="{{addRecommendPic}}" alt="点击添加新闻"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+<div ng-init="doInit();">
+    <ol class="breadcrumb">
+        <li class="active">成功案例</li>
+    </ol>
+    <div class="jumbotron">
+        <form ng-submit="deleteFileByUrl()" class="controls">
+            <label>
+                <input type="text" class="form-control" ng-model="fileUrl"/>
+            </label>
+            <button type="submit" class="btn btn-primary" ng-disabled="fileUrl == ''">删除对应文件</button>
+        </form>
+    </div>
+    <div class="jumbotron">
+        <button type="button" class="btn btn-primary" ng-click="showDialog()">显示进度条</button>
+    </div>
+</div>
