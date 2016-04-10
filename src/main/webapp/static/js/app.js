@@ -805,8 +805,8 @@ function MissionCreateCtrl($scope, $http, $location, $routeParams, $filter) {
             autoclose: true,
             todayBtn: true,
             pickerPosition: "bottom-left",
-            minView: 1
-//            startDate: $scope.mission.missionEndDate//todo 正式版要加上发布任务时间限制
+            minView: 1,
+            startDate: $scope.mission.missionEndDate
         });
         $scope.initMission();
         $scope.initMissionUserRelationship();
