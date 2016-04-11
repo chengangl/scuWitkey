@@ -1,0 +1,4 @@
+cron:
+- description: cron_validateMission
+  url: /mission/validateMission
+  schedule: "* * */1 * *"

@@ -55,7 +55,7 @@
             <div class="well" ng-show="userShow">
                 <h5>最新任务</h5>
 
-                <div ng-repeat="mission in recentlyMission" class="panel panel-primary">
+                <div ng-repeat="mission in recentlyMission" ng-class="panelClass[$index].panelClass">
                     <div class="panel-heading">
                         <h3 class="panel-title">{{mission.missionTitle}}</h3>
                     </div>

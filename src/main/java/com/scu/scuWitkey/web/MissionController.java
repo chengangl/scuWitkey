@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +24,6 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/mission", produces = "application/json; charset=UTF-8")
-@SessionAttributes("currentUser")
 public class MissionController {
     private static final Logger logger = LoggerFactory.getLogger(MissionController.class);
     @Autowired
@@ -37,7 +37,7 @@ public class MissionController {
 
     @RequestMapping(value = "/publishMission", method = RequestMethod.POST)
     @ResponseBody
-    public String publishMission(@RequestBody String missionJsonBody,HttpSession session) {
+    public String publishMission(@RequestBody String missionJsonBody, HttpSession session) {
         logger.info("publishMission---missionJsonBody = " + missionJsonBody);
         HashMap<String, Object> resultMap = new HashMap<String, Object>();
         saeMemcache.init();
@@ -185,7 +185,7 @@ public class MissionController {
             return JsonUtil.toJson(resultMap);
         }
         this.missionUserRelationshipService.bidMissionUserRelationship(id);
-        if ("单人中标".equals(missionWinningMode)){
+        if ("单人中标".equals(missionWinningMode)) {
             this.missionService.finishMission(missionId);
         }
         resultMap.put("status", Constants.HTTP_REQUEST_STATUS_CODE_SUCCESS);
@@ -263,6 +263,16 @@ public class MissionController {
         resultMap.put("status", Constants.HTTP_REQUEST_STATUS_CODE_SUCCESS);
         resultMap.put("data", missionModelList);
         resultMap.put("pageAmount", pageAmount);
+        return JsonUtil.toJson(resultMap);
+    }
+
+    @RequestMapping(value = "/validateMission", method = RequestMethod.GET)
+    @ResponseBody
+    public String validateMission() {
+        HashMap<String, Object> resultMap = new HashMap<String, Object>();
+        logger.info("validateMission execute ---");
+        missionService.updateMissionStatus();
+        resultMap.put("status", Constants.HTTP_REQUEST_STATUS_CODE_SUCCESS);
         return JsonUtil.toJson(resultMap);
     }
 }

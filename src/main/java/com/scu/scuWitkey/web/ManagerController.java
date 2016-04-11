@@ -11,18 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 
 @Controller
 @RequestMapping(value = "/manager")
-@SessionAttributes("currentUser")
 public class ManagerController {
     private static final Logger logger = LoggerFactory.getLogger(ManagerController.class);
 
@@ -102,7 +99,7 @@ public class ManagerController {
 
     @RequestMapping(value = "/deleteRecommend", method = RequestMethod.GET)
     @ResponseBody
-    public String deleteRecommend(@RequestParam("id") long id,HttpSession session) {
+    public String deleteRecommend(@RequestParam("id") long id, HttpSession session) {
         logger.info("deleteRecommend---id = " + id);
         HashMap<String, Object> resultMap = new HashMap<String, Object>();
         saeMemcache.init();

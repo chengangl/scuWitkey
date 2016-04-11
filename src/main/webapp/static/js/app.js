@@ -95,6 +95,7 @@ function MainCtrl($scope, $http) {
     $scope.password;
     $scope.recommends = [];
     $scope.recentlyMission = [];
+    $scope.panelClass = [];
     $scope.doInit = function () {
         $scope.fetchRecommends();
         $scope.fetchRecentlyMission();
@@ -116,8 +117,21 @@ function MainCtrl($scope, $http) {
             console.log(result);
             if (0 == result["status"]) {
                 $scope.recentlyMission = result["data"];
+                $scope.initPanelClass();
             }
         });
+    };
+    $scope.initPanelClass = function () {
+        $scope.panelClass = [];
+        angular.forEach($scope.recentlyMission, function (mission) {
+            if ('进行中' == mission.missionStatus) {
+                $scope.panelClass.push({panelClass: "panel panel-default"});
+            } else if ('待审核' == mission.missionStatus) {
+                $scope.panelClass.push({panelClass: "panel panel-primary"});
+            } else if ('已结束' == mission.missionStatus) {
+                $scope.panelClass.push({panelClass: "panel panel-danger"});
+            }
+        })
     };
     $scope.loginForm = function () {
         $http({
